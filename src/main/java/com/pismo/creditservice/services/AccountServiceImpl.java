@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountServiceImpl implements IAccountService {
@@ -17,6 +18,11 @@ public class AccountServiceImpl implements IAccountService {
         validateDocumentNumber(documentNumber);
         final var account = Account.builder().documentNumber(documentNumber).build();
         return repository.save(account);
+    }
+
+    @Override
+    public Optional<Account> findById(final Long accountId) {
+        return repository.findById(accountId);
     }
 
     private void validateDocumentNumber(final String documentNumber) {
