@@ -36,8 +36,12 @@ class AccountServiceImplTest {
         }
 
         @Test
-        void shouldReturnsAnErrorIfDocumentNumberIsInvalid() {
+        void shouldReturnsAnErrorIfDocumentNumberIsNull() {
             assertThrows(InvalidDocumentNumberException.class, () -> service.create(null));
+        }
+        @Test
+        void shouldReturnsAnErrorIfDocumentNumberLengthIsSmallerThan11() {
+            assertThrows(InvalidDocumentNumberException.class, () -> service.create("12345"));
         }
     }
 }
