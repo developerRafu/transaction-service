@@ -1,7 +1,8 @@
 package com.pismo.creditservice.helpers;
 
+import com.pismo.creditservice.domain.OperationType;
 import com.pismo.creditservice.domain.Transaction;
-import com.pismo.creditservice.domain.enums.OperationType;
+import com.pismo.creditservice.domain.enums.OperationTypeEnum;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +17,7 @@ public class TransactionMockBuilder {
                 .account(AccountMockBuilder.mockDefaultValues())
                 .amount(MockConstants.MOCKED_AMOUNT)
                 .eventDate(LocalDateTime.now())
-                .type(OperationType.PAYMENT)
+                .operationType(OperationTypeMockBuilder.mockDefaultValues())
                 .build();
     }
 }

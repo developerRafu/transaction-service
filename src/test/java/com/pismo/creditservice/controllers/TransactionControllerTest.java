@@ -64,7 +64,7 @@ class TransactionControllerTest {
 
     private void assertTransaction(final Transaction expected, final TransactionResponse current) {
         assertEquals(expected.getAmount(), current.getAmount());
-        assertEquals(expected.getType().getId(), current.getOperationTypeId());
+        assertEquals(expected.getOperationType().getId(), current.getOperationTypeId());
         assertEquals(expected.getAccount().getId(), current.getAccountId());
         assertEquals(expected.getId(), current.getTransactionId());
     }

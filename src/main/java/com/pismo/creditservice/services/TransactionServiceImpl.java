@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class TransactionServiceImpl implements ITransactionService {
     private final TransactionRepository repository;
     private final IAccountService accountService;
+    private final IOperationTypeService operationTypeService;
 
     @Override
     public Transaction create(final Transaction transaction) {
@@ -25,9 +26,15 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     private void validateType(final Transaction transaction) {
-        if (transaction.getType() == null) {
+        if (transaction.getOperationType() == null) {
             throw new TransactionTypeNotFound();
         }
+
+        final var operation = operationTypeService
+                .findById(transaction.getOperationType().getId())
+                .orElseThrow(TransactionTypeNotFound::new);
+
+        transaction.setOperationType(operation);
     }
 
     private void validateAccount(final Transaction transaction) {

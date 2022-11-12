@@ -1,8 +1,8 @@
 package com.pismo.creditservice.mappers;
 
 import com.pismo.creditservice.domain.Account;
+import com.pismo.creditservice.domain.OperationType;
 import com.pismo.creditservice.domain.Transaction;
-import com.pismo.creditservice.domain.enums.OperationType;
 import com.pismo.creditservice.vo.requests.TransactionRequest;
 import com.pismo.creditservice.vo.responses.TransactionResponse;
 import org.mapstruct.Mapper;
@@ -18,7 +18,7 @@ public interface TransactionMapper {
 
         transactionResponse.amount( transaction.getAmount() );
         transactionResponse.transactionId(transaction.getId());
-        transactionResponse.operationTypeId(transaction.getType().getId());
+        transactionResponse.operationTypeId(transaction.getOperationType().getId());
         transactionResponse.accountId(transaction.getAccount().getId());
 
         return transactionResponse.build();
@@ -33,7 +33,7 @@ public interface TransactionMapper {
 
         transaction.setAmount(request.getAmount());
         transaction.setAccount(accountIdToAccount(request.getAccountId()));
-        transaction.setType(operationTypeIdToOperationType(request.getOperationTypeId()));
+        transaction.setOperationType(operationTypeIdToOperationType(request.getOperationTypeId()));
         return transaction;
     }
 
@@ -46,10 +46,12 @@ public interface TransactionMapper {
         return account;
     }
 
-    default OperationType operationTypeIdToOperationType(final Integer operationTypeId) {
-        if (operationTypeId == null) {
+    default OperationType operationTypeIdToOperationType(final Long operationTypeId) {
+        if(operationTypeId==null){
             return null;
         }
-        return OperationType.of(operationTypeId);
+        final var operationType = new OperationType();
+        operationType.setId(operationTypeId);
+        return operationType;
     }
 }

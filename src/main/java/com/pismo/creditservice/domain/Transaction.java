@@ -1,6 +1,5 @@
 package com.pismo.creditservice.domain;
 
-import com.pismo.creditservice.domain.enums.OperationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -9,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,14 +25,16 @@ import java.time.LocalDateTime;
 @Table(name = "TAB_TRANSACTION")
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private OperationType type;
     private BigDecimal amount;
     private LocalDateTime eventDate;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ID")
     private Account account;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "OPERATION_TYPE_ID", referencedColumnName = "ID")
+    private OperationType operationType;
 }

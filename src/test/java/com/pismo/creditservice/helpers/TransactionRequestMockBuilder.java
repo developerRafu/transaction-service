@@ -1,6 +1,6 @@
 package com.pismo.creditservice.helpers;
 
-import com.pismo.creditservice.domain.enums.OperationType;
+import com.pismo.creditservice.domain.enums.OperationTypeEnum;
 import com.pismo.creditservice.vo.requests.TransactionRequest;
 
 public class TransactionRequestMockBuilder {
@@ -10,7 +10,7 @@ public class TransactionRequestMockBuilder {
                 .builder()
                 .accountId(MockConstants.MOCKED_ID)
                 .amount(MockConstants.MOCKED_AMOUNT)
-                .operationTypeId(OperationType.PAYMENT.getId())
+                .operationTypeId(OperationTypeEnum.PAYMENT.getId())
                 .build();
     }
 }
