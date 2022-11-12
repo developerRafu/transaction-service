@@ -2,8 +2,6 @@ package com.pismo.creditservice.errors;
 
 import com.pismo.creditservice.controllers.AccountController;
 import com.pismo.creditservice.errors.helpers.MessagesEnum;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,7 +11,6 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice(assignableTypes = AccountController.class)
 @RestController
-@Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class AccountsExceptionHandler {
 
     @ExceptionHandler(InvalidDocumentNumberException.class)
