@@ -3,6 +3,7 @@ package com.pismo.creditservice.domain;
 import com.pismo.creditservice.domain.enums.OperationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Builder
 @Entity
 @Table(name = "TAB_TRANSACTION")
@@ -33,7 +35,7 @@ public class Transaction {
     private BigDecimal amount;
     private LocalDateTime eventDate;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ID")
     private Account account;
 }
