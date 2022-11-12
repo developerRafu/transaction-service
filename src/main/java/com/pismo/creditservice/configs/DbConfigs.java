@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class DbConfigs {
     public boolean fillDatabase() {
         final var accountOne = accountService.create("12345678900");
         final var operations = saveAllOperations();
-        final var transactionOne = Transaction.builder().account(accountOne).operationType(operations.get(0)).build();
+        final var transactionOne = Transaction.builder().account(accountOne).operationType(operations.get(0)).amount(BigDecimal.valueOf(100)).build();
         transactionService.create(transactionOne);
         return Boolean.TRUE;
     }
