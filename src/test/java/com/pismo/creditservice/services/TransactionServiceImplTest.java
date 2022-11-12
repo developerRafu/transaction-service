@@ -3,6 +3,7 @@ package com.pismo.creditservice.services;
 import com.pismo.creditservice.errors.AccountNotFoundException;
 import com.pismo.creditservice.errors.TransactionTypeNotFound;
 import com.pismo.creditservice.helpers.AccountMockBuilder;
+import com.pismo.creditservice.helpers.OperationTypeMockBuilder;
 import com.pismo.creditservice.helpers.TransactionMockBuilder;
 import com.pismo.creditservice.repositories.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,12 +22,14 @@ class TransactionServiceImplTest {
     TransactionRepository repository;
     ITransactionService service;
     IAccountService accountService;
+    IOperationTypeService operationTypeService;
 
     @BeforeEach
     void setUp() {
         repository = mock(TransactionRepository.class);
         accountService = mock(IAccountService.class);
-        service = new TransactionServiceImpl(repository, accountService);
+        operationTypeService = mock(IOperationTypeService.class);
+        service = new TransactionServiceImpl(repository, accountService, operationTypeService);
     }
 
     @Nested
@@ -35,8 +38,10 @@ class TransactionServiceImplTest {
         void shouldCreateATransaction() {
             final var transaction = TransactionMockBuilder.mockDefaultValues();
             final var account = AccountMockBuilder.mockDefaultValues();
+            final var operation = OperationTypeMockBuilder.mockDefaultValues();
             when(repository.save(any())).thenReturn(transaction);
             when(accountService.findById(any())).thenReturn(Optional.of(account));
+            when(operationTypeService.findById(any())).thenReturn(Optional.of(operation));
             final var result = service.create(transaction);
             assertEquals(transaction, result);
         }
@@ -52,10 +57,20 @@ class TransactionServiceImplTest {
         @Test
         void shouldTrowsAnExceptionWhenTypeIsNull() {
             final var transaction = TransactionMockBuilder.mockDefaultValues();
-            transaction.setType(null);
+            transaction.setOperationType(null);
             final var account = AccountMockBuilder.mockDefaultValues();
             when(repository.save(any())).thenReturn(transaction);
             when(accountService.findById(any())).thenReturn(Optional.of(account));
+            assertThrows(TransactionTypeNotFound.class, () -> service.create(transaction));
+        }
+
+        @Test
+        void shouldTrowsAnExceptionWhenTypeIdIsInvalid() {
+            final var transaction = TransactionMockBuilder.mockDefaultValues();
+            final var account = AccountMockBuilder.mockDefaultValues();
+            when(repository.save(any())).thenReturn(transaction);
+            when(accountService.findById(any())).thenReturn(Optional.of(account));
+            when(operationTypeService.findById(any())).thenReturn(Optional.empty());
             assertThrows(TransactionTypeNotFound.class, () -> service.create(transaction));
         }
     }

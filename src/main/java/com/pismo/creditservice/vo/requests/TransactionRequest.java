@@ -20,6 +20,6 @@ public class TransactionRequest {
     @JsonProperty(value = "account_id")
     private Long accountId;
     @JsonProperty(value = "operation_type_id")
-    private Integer operationTypeId;
+    private Long operationTypeId;
     private BigDecimal amount;
 }

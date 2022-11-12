@@ -6,20 +6,20 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Getter
-public enum OperationType {
-    PURCHASE(1),
-    INSTALLMENT_PURCHASE(2),
-    WITHDRAWAL(3),
-    PAYMENT(4);
-    private final Integer id;
+public enum OperationTypeEnum {
+    PURCHASE(1L),
+    INSTALLMENT_PURCHASE(2L),
+    WITHDRAWAL(3L),
+    PAYMENT(4L);
+    private final Long id;
 
-    OperationType(final Integer id) {
+    OperationTypeEnum(final Long id) {
         this.id = id;
     }
 
-    public static OperationType of(final Integer id) {
+    public static OperationTypeEnum of(final Integer id) {
         return Arrays
-                .stream(OperationType.values())
+                .stream(OperationTypeEnum.values())
                 .filter(type -> Objects.equals(type.getId(), id))
                 .findFirst()
                 .orElse(null);
