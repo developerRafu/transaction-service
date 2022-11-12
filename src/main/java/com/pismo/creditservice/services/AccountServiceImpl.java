@@ -5,10 +5,12 @@ import com.pismo.creditservice.errors.InvalidDocumentNumberException;
 import com.pismo.creditservice.repositories.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountServiceImpl implements IAccountService {
     private final AccountRepository repository;
@@ -26,7 +28,7 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     private void validateDocumentNumber(final String documentNumber) {
-        if(Objects.isNull(documentNumber) || documentNumber.length() < 11){
+        if (Objects.isNull(documentNumber) || documentNumber.length() < 11) {
             throw new InvalidDocumentNumberException(documentNumber);
         }
     }
