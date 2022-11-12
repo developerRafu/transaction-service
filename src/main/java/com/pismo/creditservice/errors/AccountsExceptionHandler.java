@@ -25,4 +25,14 @@ public class AccountsExceptionHandler {
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(error);
     }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<DefaultError> handleInvalidDocumentNumberException(final AccountNotFoundException ex, final WebRequest request) {
+        final var error = DefaultError
+                .builder()
+                .message(MessagesEnum.INVALID_NUMBER_DOCUMENT.getFormattedMessage(ex.getAccountId()))
+                .code(HttpStatus.NOT_FOUND.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(error);
+    }
 }

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -39,9 +41,22 @@ class AccountServiceImplTest {
         void shouldReturnsAnErrorIfDocumentNumberIsNull() {
             assertThrows(InvalidDocumentNumberException.class, () -> service.create(null));
         }
+
         @Test
         void shouldReturnsAnErrorIfDocumentNumberLengthIsSmallerThan11() {
             assertThrows(InvalidDocumentNumberException.class, () -> service.create("12345"));
+        }
+    }
+
+    @Nested
+    class findByIdTests {
+        @Test
+        void shouldFindAccount() {
+            final var account = AccountMockBuilder.mockDefaultValues();
+            when(repository.findById(any())).thenReturn(Optional.of(account));
+            final var result = service.findById(MockConstants.MOCKED_ID);
+            assertTrue(result.isPresent());
+            assertEquals(account, result.get());
         }
     }
 }
