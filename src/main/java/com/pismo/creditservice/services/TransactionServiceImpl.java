@@ -27,12 +27,12 @@ public class TransactionServiceImpl implements ITransactionService {
 
     private void validateType(final Transaction transaction) {
         if (transaction.getOperationType() == null) {
-            throw new TransactionTypeNotFound();
+            throw new TransactionTypeNotFound(null);
         }
 
         final var operation = operationTypeService
                 .findById(transaction.getOperationType().getId())
-                .orElseThrow(TransactionTypeNotFound::new);
+                .orElseThrow(() -> new TransactionTypeNotFound(transaction.getOperationType().getId()));
 
         transaction.setOperationType(operation);
     }
