@@ -1,0 +1,15 @@
+version: '1'
+services:
+  credit-service:
+    container_name: credit-service
+    build:
+      context: credit-service
+      dockerfile: Dockerfile
+    image: credit-service:latest
+    ports:
+      - 8080:8080
+    networks:
+      - spring-cloud-network
+networks:
+  spring-cloud-network:
+    driver: bridge
