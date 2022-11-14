@@ -2,19 +2,16 @@ package com.pismo.creditservice.services;
 
 import com.pismo.creditservice.domain.OperationType;
 import com.pismo.creditservice.domain.Transaction;
-import com.pismo.creditservice.domain.enums.OperationTypeEnum;
 import com.pismo.creditservice.errors.AccountNotFoundException;
 import com.pismo.creditservice.errors.InvalidBankOperation;
 import com.pismo.creditservice.errors.TransactionTypeNotFound;
 import com.pismo.creditservice.repositories.TransactionRepository;
 import com.pismo.creditservice.utils.models.BankStatement;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
