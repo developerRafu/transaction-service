@@ -27,7 +27,7 @@ public class DbConfigs {
     public boolean fillDatabase() {
         final var accountOne = accountService.create("12345678900");
         final var operations = saveAllOperations();
-        final var transactionOne = Transaction.builder().account(accountOne).operationType(operations.get(0)).amount(BigDecimal.valueOf(100)).build();
+        final var transactionOne = Transaction.builder().account(accountOne).operationType(operations.get(3)).amount(BigDecimal.valueOf(100)).build();
         transactionService.create(transactionOne);
         return Boolean.TRUE;
     }

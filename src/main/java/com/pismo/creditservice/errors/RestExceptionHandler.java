@@ -17,7 +17,10 @@ import java.util.stream.Collectors;
 public class RestExceptionHandler {
 
     @ExceptionHandler(InvalidDocumentNumberException.class)
-    public ResponseEntity<DefaultError> handleInvalidDocumentNumberException(final InvalidDocumentNumberException ex, final WebRequest request) {
+    public ResponseEntity<DefaultError> handleInvalidDocumentNumberException(
+            final InvalidDocumentNumberException ex,
+            final WebRequest request
+    ) {
         final var error = DefaultError
                 .builder()
                 .message(MessagesEnum.INVALID_NUMBER_DOCUMENT.getFormattedMessage(ex.getMessage()))
@@ -27,7 +30,10 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<DefaultError> handleAccountNotFoundException(final AccountNotFoundException ex, final WebRequest request) {
+    public ResponseEntity<DefaultError> handleAccountNotFoundException(
+            final AccountNotFoundException ex,
+            final WebRequest request
+    ) {
         final var error = DefaultError
                 .builder()
                 .message(MessagesEnum.ACCOUNT_NOT_FOUND.getFormattedMessage(ex.getAccountId()))
@@ -37,7 +43,10 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<DefaultError> handleMethodArgumentNotValidException(final MethodArgumentNotValidException ex, final WebRequest request) {
+    public ResponseEntity<DefaultError> handleMethodArgumentNotValidException(
+            final MethodArgumentNotValidException ex,
+            final WebRequest request
+    ) {
         final var error = DefaultError
                 .builder()
                 .message(MessagesEnum.INVALID_REQUEST.getFormattedMessage())
@@ -48,10 +57,31 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(TransactionTypeNotFound.class)
-    public ResponseEntity<DefaultError> handleInvalidDocumentNumberException(final TransactionTypeNotFound ex, final WebRequest request) {
+    public ResponseEntity<DefaultError> handleInvalidDocumentNumberException(
+            final TransactionTypeNotFound ex,
+            final WebRequest request
+    ) {
         final var error = DefaultError
                 .builder()
                 .message(MessagesEnum.INVALID_TRANSACTION_TYPE.getFormattedMessage(ex.getTransactionTypeId()))
+                .code(HttpStatus.BAD_REQUEST.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(error);
+    }
+
+    @ExceptionHandler(InvalidBankOperation.class)
+    public ResponseEntity<DefaultError> handleInvalidBankOperation(
+            final InvalidBankOperation ex,
+            final WebRequest request
+    ) {
+        final var error = DefaultError
+                .builder()
+                .message(MessagesEnum.INVALID_BANK_OPERATION.getFormattedMessage
+                        (
+                                ex.operationTypeEnum.getDescription(),
+                                ex.operationTypeEnum.getOperationAmountDescription()
+                        )
+                )
                 .code(HttpStatus.BAD_REQUEST.value())
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(error);
