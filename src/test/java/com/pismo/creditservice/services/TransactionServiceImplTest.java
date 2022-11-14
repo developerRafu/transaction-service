@@ -1,6 +1,8 @@
 package com.pismo.creditservice.services;
 
+import com.pismo.creditservice.domain.enums.OperationTypeEnum;
 import com.pismo.creditservice.errors.AccountNotFoundException;
+import com.pismo.creditservice.errors.InvalidBankOperation;
 import com.pismo.creditservice.errors.TransactionTypeNotFound;
 import com.pismo.creditservice.helpers.AccountMockBuilder;
 import com.pismo.creditservice.helpers.OperationTypeMockBuilder;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,19 +62,50 @@ class TransactionServiceImplTest {
             final var transaction = TransactionMockBuilder.mockDefaultValues();
             transaction.setOperationType(null);
             final var account = AccountMockBuilder.mockDefaultValues();
-            when(repository.save(any())).thenReturn(transaction);
             when(accountService.findById(any())).thenReturn(Optional.of(account));
             assertThrows(TransactionTypeNotFound.class, () -> service.create(transaction));
         }
 
         @Test
-        void shouldTrowsAnExceptionWhenTypeIdIsInvalid() {
+        void shouldTrowsAnExceptionWhenTypeIsValidButAmountIsNot() {
             final var transaction = TransactionMockBuilder.mockDefaultValues();
+            transaction.setAmount(BigDecimal.valueOf(100));
             final var account = AccountMockBuilder.mockDefaultValues();
-            when(repository.save(any())).thenReturn(transaction);
             when(accountService.findById(any())).thenReturn(Optional.of(account));
-            when(operationTypeService.findById(any())).thenReturn(Optional.empty());
-            assertThrows(TransactionTypeNotFound.class, () -> service.create(transaction));
+            when(operationTypeService.findById(any())).thenReturn(Optional.of(transaction.getOperationType()));
+            assertThrows(InvalidBankOperation.class, () -> service.create(transaction));
+        }
+
+        @Test
+        void shouldTrowsAnExceptionWhenTypeIsINSTALLMENT_PURCHASEAndAmountIsPositive() {
+            final var transaction = TransactionMockBuilder.mockDefaultValues();
+            transaction.setAmount(BigDecimal.valueOf(100));
+            transaction.getOperationType().setDescription(OperationTypeEnum.INSTALLMENT_PURCHASE);
+            final var account = AccountMockBuilder.mockDefaultValues();
+            when(accountService.findById(any())).thenReturn(Optional.of(account));
+            when(operationTypeService.findById(any())).thenReturn(Optional.of(transaction.getOperationType()));
+            assertThrows(InvalidBankOperation.class, () -> service.create(transaction));
+        }
+
+        @Test
+        void shouldTrowsAnExceptionWhenTypeIsWITHDRAWALAndAmountIsPositive() {
+            final var transaction = TransactionMockBuilder.mockDefaultValues();
+            transaction.setAmount(BigDecimal.valueOf(100));
+            transaction.getOperationType().setDescription(OperationTypeEnum.WITHDRAWAL);
+            final var account = AccountMockBuilder.mockDefaultValues();
+            when(accountService.findById(any())).thenReturn(Optional.of(account));
+            when(operationTypeService.findById(any())).thenReturn(Optional.of(transaction.getOperationType()));
+            assertThrows(InvalidBankOperation.class, () -> service.create(transaction));
+        }
+
+        @Test
+        void shouldTrowsAnExceptionWhenTypeIsPAYMENTAndAmountIsNegative() {
+            final var transaction = TransactionMockBuilder.mockDefaultValues();
+            transaction.getOperationType().setDescription(OperationTypeEnum.PAYMENT);
+            final var account = AccountMockBuilder.mockDefaultValues();
+            when(accountService.findById(any())).thenReturn(Optional.of(account));
+            when(operationTypeService.findById(any())).thenReturn(Optional.of(transaction.getOperationType()));
+            assertThrows(InvalidBankOperation.class, () -> service.create(transaction));
         }
     }
 }

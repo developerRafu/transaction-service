@@ -1,13 +1,20 @@
 package com.pismo.creditservice.services;
 
+import com.pismo.creditservice.domain.OperationType;
 import com.pismo.creditservice.domain.Transaction;
+import com.pismo.creditservice.domain.enums.OperationTypeEnum;
 import com.pismo.creditservice.errors.AccountNotFoundException;
+import com.pismo.creditservice.errors.InvalidBankOperation;
 import com.pismo.creditservice.errors.TransactionTypeNotFound;
 import com.pismo.creditservice.repositories.TransactionRepository;
+import com.pismo.creditservice.utils.models.BankStatement;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -18,6 +25,7 @@ public class TransactionServiceImpl implements ITransactionService {
     private final IOperationTypeService operationTypeService;
 
     @Override
+    @Transactional
     public Transaction create(final Transaction transaction) {
         validateAccount(transaction);
         validateType(transaction);
@@ -34,6 +42,10 @@ public class TransactionServiceImpl implements ITransactionService {
                 .findById(transaction.getOperationType().getId())
                 .orElseThrow(() -> new TransactionTypeNotFound(transaction.getOperationType().getId()));
 
+        final var bankStatement = isValidBankStatement(transaction, operation);
+        if (!bankStatement.isValid()) {
+            throw new InvalidBankOperation(operation.getDescription());
+        }
         transaction.setOperationType(operation);
     }
 
@@ -41,5 +53,13 @@ public class TransactionServiceImpl implements ITransactionService {
         final var accountId = transaction.getAccount().getId();
         final var account = accountService.findById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
         transaction.setAccount(account);
+    }
+
+    private BankStatement isValidBankStatement(final Transaction transaction, final OperationType operation) {
+        return BankStatement
+                .builder()
+                .amount(transaction.getAmount())
+                .operationTypeEnum(operation.getDescription())
+                .build();
     }
 }
