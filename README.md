@@ -34,4 +34,4 @@ $ docker-compose config
 ````
 docker-compose up 
 ````
- - You can go to http://localhost:8080/swagger-ui/index.html to access the documentation.
+ - After run, you can go to http://localhost:8080/swagger-ui/index.html to access the documentation.
