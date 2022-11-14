@@ -2,9 +2,6 @@ package com.pismo.creditservice.domain.enums;
 
 import lombok.Getter;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 @Getter
 public enum OperationTypeEnum {
     PURCHASE(1L, "Purchase", "negative"),
@@ -19,13 +16,5 @@ public enum OperationTypeEnum {
         this.id = id;
         this.operationAmountDescription = operationAmountDescription;
         this.description = description;
-    }
-
-    public static OperationTypeEnum of(final Long id) {
-        return Arrays
-                .stream(OperationTypeEnum.values())
-                .filter(type -> Objects.equals(type.getId(), id))
-                .findFirst()
-                .orElse(null);
     }
 }

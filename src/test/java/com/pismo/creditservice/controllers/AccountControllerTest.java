@@ -2,7 +2,6 @@ package com.pismo.creditservice.controllers;
 
 import com.pismo.creditservice.errors.AccountNotFoundException;
 import com.pismo.creditservice.helpers.AccountMockBuilder;
-import com.pismo.creditservice.helpers.AccountRequestMockBuilder;
 import com.pismo.creditservice.helpers.MockConstants;
 import com.pismo.creditservice.mappers.AccountMapper;
 import com.pismo.creditservice.services.IAccountService;
@@ -14,13 +13,9 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class AccountControllerTest {
     AccountController controller;

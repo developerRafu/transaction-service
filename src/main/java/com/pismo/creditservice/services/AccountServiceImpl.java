@@ -25,9 +25,4 @@ public class AccountServiceImpl implements IAccountService {
         return repository.findById(accountId);
     }
 
-//    private void validateDocumentNumber(final String documentNumber) {
-//        if (Objects.isNull(documentNumber) || documentNumber.length() < 11) {
-//            throw new InvalidDocumentNumberException(documentNumber);
-//        }
-//    }
 }
