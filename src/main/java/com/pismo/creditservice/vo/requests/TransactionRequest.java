@@ -1,13 +1,9 @@
 package com.pismo.creditservice.vo.requests;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Getter
@@ -15,11 +11,13 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionRequest {
     @JsonProperty(value = "account_id")
+    @NotNull
     private Long accountId;
     @JsonProperty(value = "operation_type_id")
+    @NotNull
     private Long operationTypeId;
+    @NotNull
     private BigDecimal amount;
 }

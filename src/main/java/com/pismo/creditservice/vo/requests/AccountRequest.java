@@ -2,11 +2,10 @@ package com.pismo.creditservice.vo.requests;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -16,5 +15,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountRequest {
     @JsonProperty(value = "document_number")
+    @Length(min = 11, max = 11)
+    @NotNull
     private String documentNumber;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @RestController
@@ -22,7 +23,7 @@ public class TransactionController {
     private final TransactionMapper mapper;
 
     @PostMapping
-    public ResponseEntity<TransactionResponse> post(@RequestBody @NotNull final TransactionRequest request) {
+    public ResponseEntity<TransactionResponse> post(@RequestBody @NotNull @Valid final TransactionRequest request) {
         final var transaction = mapper.toTransaction(request);
         final var response = mapper.toResponse(service.create(transaction));
         return ResponseEntity.ok().body(response);

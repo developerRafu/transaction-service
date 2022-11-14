@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,4 +16,5 @@ import lombok.Setter;
 public class DefaultError {
     private String message;
     private Integer code;
+    private List<String> details;
 }
