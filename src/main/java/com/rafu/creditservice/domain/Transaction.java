@@ -31,6 +31,8 @@ public class Transaction {
     private Long id;
 
     private BigDecimal amount;
+    private BigDecimal balance;
+    private boolean paid;
     private LocalDateTime eventDate;
 
     @ManyToOne(optional = false)

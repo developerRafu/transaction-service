@@ -22,7 +22,7 @@ public class BankStatement {
         }
     }
 
-    private boolean isAmountOut() {
+    public boolean isAmountOut() {
         return operationTypeEnum == OperationTypeEnum.PURCHASE
                 || operationTypeEnum == OperationTypeEnum.INSTALLMENT_PURCHASE
                 || operationTypeEnum == OperationTypeEnum.WITHDRAWAL;
