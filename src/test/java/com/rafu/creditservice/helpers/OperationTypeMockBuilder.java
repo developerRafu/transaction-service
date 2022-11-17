@@ -8,6 +8,26 @@ public class OperationTypeMockBuilder {
     }
 
     public static OperationType mockDefaultValues() {
-        return OperationType.builder().id(MockConstants.MOCKED_ID).description(OperationTypeEnum.PURCHASE).build();
+        return OperationType
+                .builder()
+                .id(MockConstants.MOCKED_ID)
+                .description(OperationTypeEnum.PURCHASE)
+                .build();
+    }
+
+    public static OperationType mockDefaulPayment() {
+        return OperationType
+                .builder()
+                .id(MockConstants.MOCKED_ID)
+                .description(OperationTypeEnum.PAYMENT)
+                .build();
+    }
+
+    public static OperationType mockDefaultInstalment() {
+        return OperationType
+                .builder()
+                .id(MockConstants.MOCKED_ID)
+                .description(OperationTypeEnum.INSTALLMENT_PURCHASE)
+                .build();
     }
 }

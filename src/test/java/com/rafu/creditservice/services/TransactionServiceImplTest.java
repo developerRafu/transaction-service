@@ -3,6 +3,7 @@ package com.rafu.creditservice.services;
 import com.rafu.creditservice.domain.enums.OperationTypeEnum;
 import com.rafu.creditservice.errors.AccountNotFoundException;
 import com.rafu.creditservice.errors.InvalidBankOperation;
+import com.rafu.creditservice.errors.OverpaymentException;
 import com.rafu.creditservice.errors.TransactionTypeNotFound;
 import com.rafu.creditservice.helpers.AccountMockBuilder;
 import com.rafu.creditservice.helpers.OperationTypeMockBuilder;
@@ -13,13 +14,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class TransactionServiceImplTest {
     TransactionRepository repository;
@@ -106,6 +107,60 @@ class TransactionServiceImplTest {
             when(accountService.findById(any())).thenReturn(Optional.of(account));
             when(operationTypeService.findById(any())).thenReturn(Optional.of(transaction.getOperationType()));
             assertThrows(InvalidBankOperation.class, () -> service.create(transaction));
+        }
+
+        @Test
+        void shouldReturnAValidTransactionWhenISentA150AmountPaymentAndHaveA100AmountPurchase() {
+            final var payment = TransactionMockBuilder.mockDefaultPayment();
+            final var purchaseNotPaid = Collections.singletonList(TransactionMockBuilder.mockDefaultValues());
+            final var operation = OperationTypeMockBuilder.mockDefaulPayment();
+            final var account = AccountMockBuilder.mockDefaultValues();
+
+            when(repository.save(any())).thenReturn(payment);
+            when(accountService.findById(any())).thenReturn(Optional.of(account));
+            when(operationTypeService.findById(any())).thenReturn(Optional.of(operation));
+            when(repository.findAllNotPaidByAccountId(any())).thenReturn(purchaseNotPaid);
+
+            final var result = service.create(payment);
+            assertEquals(payment, result);
+        }
+
+        @Test
+        void shouldReturnAValidTransactionWhenWeHaveTwoTransactions() {
+            final var payment = TransactionMockBuilder.mockDefaultPayment();
+            final var transactionsNotPaid = List.of(
+                    TransactionMockBuilder.mockDefaultValues(),
+                    TransactionMockBuilder.mockDefaultInstallment()
+            );
+            final var operation = OperationTypeMockBuilder.mockDefaulPayment();
+            final var account = AccountMockBuilder.mockDefaultValues();
+
+            when(repository.save(any())).thenReturn(payment);
+            when(accountService.findById(any())).thenReturn(Optional.of(account));
+            when(operationTypeService.findById(any())).thenReturn(Optional.of(operation));
+            when(repository.findAllNotPaidByAccountId(any())).thenReturn(transactionsNotPaid);
+
+            final var result = service.create(payment);
+            assertEquals(payment, result);
+        }
+
+        @Test
+        void shouldThrowsAnExceptionIfTheBalanceIsGreaterThanZero() {
+            final var payment = TransactionMockBuilder.mockDefaultPayment();
+            payment.setAmount(BigDecimal.valueOf(300));
+            final var transactionsNotPaid = List.of(
+                    TransactionMockBuilder.mockDefaultValues(),
+                    TransactionMockBuilder.mockDefaultInstallment()
+            );
+            final var operation = OperationTypeMockBuilder.mockDefaulPayment();
+            final var account = AccountMockBuilder.mockDefaultValues();
+
+            when(repository.save(any())).thenReturn(payment);
+            when(accountService.findById(any())).thenReturn(Optional.of(account));
+            when(operationTypeService.findById(any())).thenReturn(Optional.of(operation));
+            when(repository.findAllNotPaidByAccountId(any())).thenReturn(transactionsNotPaid);
+
+            assertThrows(OverpaymentException.class, () -> service.create(payment));
         }
     }
 }
